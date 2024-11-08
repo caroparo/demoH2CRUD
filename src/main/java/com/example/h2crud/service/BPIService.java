@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.example.h2crud.model.vo.CoinDeskBPIResponseVO;
+import com.example.h2crud.model.dto.CoinDeskBPIResponse;
 
 @Service
 public class BPIService {
@@ -14,9 +14,9 @@ public class BPIService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public CoinDeskBPIResponseVO getCurrentBPI() {
+    public CoinDeskBPIResponse getCurrentBPI() {
         String uriString = UriComponentsBuilder.fromHttpUrl(COINDESK_API_URL).toUriString();
-        CoinDeskBPIResponseVO response = restTemplate.getForObject(uriString, CoinDeskBPIResponseVO.class);
+        CoinDeskBPIResponse response = restTemplate.getForObject(uriString, CoinDeskBPIResponse.class);
 
         if (response != null && response.getBpi() != null) {
             return response;

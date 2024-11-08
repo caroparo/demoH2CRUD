@@ -1,17 +1,20 @@
-package com.example.h2crud.model.vo;
+package com.example.h2crud.model.dto;
 
 import java.util.Map;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
-public class CoinDeskBPIResponseVO {
+@Accessors(chain = true)
+public class CoinDeskBPIResponse {
     private Time time;
     private Map<String, BpiCurrency> bpi;
 
     @Data
+    @Accessors(chain = true)
     public static class Time {
-        private String updated;
+        private String updatedISO;
     }
 
     @Data
