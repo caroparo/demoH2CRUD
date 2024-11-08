@@ -14,9 +14,9 @@ import lombok.*;
 @Data
 public class CurrencyInfo {
     @Id
-    @Column(name = "code", length = 3, nullable = false, unique = true)
+    @Column(name = "code", length = 3, columnDefinition = "VARCHAR(3)")
     private String code;
 
-    @Column(name = "zh_tw", nullable = false)
+    @Column(name = "zh_tw", unique = true, nullable = false, columnDefinition = "NVARCHAR(255)")
     private String chineseName;
 }

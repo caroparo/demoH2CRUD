@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.h2crud.dto.CurrencyRequest;
 import com.example.h2crud.model.CurrencyInfo;
+import com.example.h2crud.model.dto.CurrencyRequest;
 import com.example.h2crud.repo.CurrencyRepo;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,7 +61,7 @@ public class CurrencyController {
     }
 
     @PostMapping("/{code}")
-    public ResponseEntity<?> addCurrency(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
+    public ResponseEntity<?> addCurrency(@PathVariable String code, @Valid @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
@@ -75,7 +77,7 @@ public class CurrencyController {
     }
 
     @PutMapping("/{code}")
-    public ResponseEntity<?> updateCurrencyByCode(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
+    public ResponseEntity<?> updateCurrencyByCode(@PathVariable String code, @Valid @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
