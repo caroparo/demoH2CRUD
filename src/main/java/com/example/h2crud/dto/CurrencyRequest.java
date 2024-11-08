@@ -5,6 +5,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class CurrencyRequest {
-    @NotNull
+    @NotNull(message = "Currency name cannot be null")
     String name;
 }

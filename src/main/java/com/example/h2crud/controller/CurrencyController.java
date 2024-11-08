@@ -19,14 +19,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
+@RequestMapping("/currencies")
 public class CurrencyController {
 
     @Autowired
     private CurrencyRepo currencyRepo;
 
-    @GetMapping("/currencies")
+    @GetMapping
     public ResponseEntity<?> getAllCurrencies() {
         try {
             List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>();
@@ -42,7 +44,7 @@ public class CurrencyController {
         }
     }
 
-    @GetMapping("/currencies/{code}")
+    @GetMapping("/{code}")
     public ResponseEntity<?> getCurrencyByCode(@PathVariable String code) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
@@ -56,7 +58,7 @@ public class CurrencyController {
         }
     }
 
-    @PostMapping("/currencies/{code}")
+    @PostMapping("/{code}")
     public ResponseEntity<?> addCurrency(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
@@ -72,7 +74,7 @@ public class CurrencyController {
         }
     }
 
-    @PutMapping("/currencies/{code}")
+    @PutMapping("/{code}")
     public ResponseEntity<?> updateCurrencyByCode(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
@@ -89,7 +91,7 @@ public class CurrencyController {
         }
     }
 
-    @DeleteMapping("/currencies/{code}")
+    @DeleteMapping("/{code}")
     public ResponseEntity<?> deleteCurrencyByCode(@PathVariable String code) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
