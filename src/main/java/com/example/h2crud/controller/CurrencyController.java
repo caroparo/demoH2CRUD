@@ -33,9 +33,7 @@ public class CurrencyController {
     @GetMapping
     public ResponseEntity<?> getAllCurrencies() {
         try {
-            List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>();
-            currencyRepo.findAll().forEach(currencies::add);
-
+            List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>(currencyRepo.findAll());
             if (currencies.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -46,10 +44,27 @@ public class CurrencyController {
         }
     }
 
-    @GetMapping("/{code}")
-    public ResponseEntity<?> getCurrencyByCode(@PathVariable String code) {
+    @PostMapping
+    public ResponseEntity<?> addCurrency(@Valid @RequestBody CurrencyRequest currencyRequest) {
         try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
+            String code = currencyRequest.getCode().toUpperCase();
+            Optional<CurrencyInfo> existingCurrency = currencyRepo.findByCode(code);
+            if (existingCurrency.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            } else {
+                CurrencyInfo newCurrency = new CurrencyInfo().setCode(code).setChineseName(currencyRequest.getName());
+                currencyRepo.save(newCurrency);
+                return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCurrencyByCode(@PathVariable Long id) {
+        try {
+            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
             if (existingCurrency.isPresent()) {
                 return new ResponseEntity<>(existingCurrency.get(), HttpStatus.OK);
             } else {
@@ -60,26 +75,10 @@ public class CurrencyController {
         }
     }
 
-    @PostMapping("/{code}")
-    public ResponseEntity<?> addCurrency(@PathVariable String code, @Valid @RequestBody CurrencyRequest currencyRequest) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCurrencyByCode(@PathVariable Long id, @Valid @RequestBody CurrencyRequest currencyRequest) {
         try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
-            if (existingCurrency.isPresent()) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            } else {
-                CurrencyInfo newCurrency = new CurrencyInfo(code, currencyRequest.getName());
-                currencyRepo.save(newCurrency);
-                return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/{code}")
-    public ResponseEntity<?> updateCurrencyByCode(@PathVariable String code, @Valid @RequestBody CurrencyRequest currencyRequest) {
-        try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
+            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
             if (existingCurrency.isPresent()) {
                 CurrencyInfo updatedCurrencyInfo = existingCurrency.get();
                 updatedCurrencyInfo.setChineseName(currencyRequest.getName());
@@ -93,12 +92,12 @@ public class CurrencyController {
         }
     }
 
-    @DeleteMapping("/{code}")
-    public ResponseEntity<?> deleteCurrencyByCode(@PathVariable String code) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCurrencyByCode(@PathVariable Long id) {
         try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
+            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
             if (existingCurrency.isPresent()) {
-                currencyRepo.deleteById(code);
+                currencyRepo.deleteById(id);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
