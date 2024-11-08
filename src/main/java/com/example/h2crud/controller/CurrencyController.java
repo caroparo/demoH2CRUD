@@ -32,7 +32,7 @@ public class CurrencyController {
 
     @GetMapping
     public ResponseEntity<?> getAllCurrencies() {
-        List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>(currencyRepo.findAll());
+        List<CurrencyInfo> currencies = currencyRepo.findAll();
         if (currencies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
