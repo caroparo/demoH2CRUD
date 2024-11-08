@@ -32,78 +32,58 @@ public class CurrencyController {
 
     @GetMapping
     public ResponseEntity<?> getAllCurrencies() {
-        try {
-            List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>(currencyRepo.findAll());
-            if (currencies.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-
+        List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>(currencyRepo.findAll());
+        if (currencies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
             return new ResponseEntity<List<CurrencyInfo>>(currencies, HttpStatus.OK);
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
     public ResponseEntity<?> addCurrency(@Valid @RequestBody CurrencyRequest currencyRequest) {
-        try {
-            String code = currencyRequest.getCode().toUpperCase();
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findByCode(code);
-            if (existingCurrency.isPresent()) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            } else {
-                CurrencyInfo newCurrency = new CurrencyInfo().setCode(code).setChineseName(currencyRequest.getName());
-                currencyRepo.save(newCurrency);
-                return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        String code = currencyRequest.getCode().toUpperCase();
+        Optional<CurrencyInfo> existingCurrency = currencyRepo.findByCode(code);
+        if (existingCurrency.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            CurrencyInfo newCurrency = new CurrencyInfo().setCode(code).setChineseName(currencyRequest.getName());
+            currencyRepo.save(newCurrency);
+            return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCurrencyByCode(@PathVariable Long id) {
-        try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
-            if (existingCurrency.isPresent()) {
-                return new ResponseEntity<>(existingCurrency.get(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
+        if (existingCurrency.isPresent()) {
+            return new ResponseEntity<>(existingCurrency.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCurrencyByCode(@PathVariable Long id, @Valid @RequestBody CurrencyRequest currencyRequest) {
-        try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
-            if (existingCurrency.isPresent()) {
-                CurrencyInfo updatedCurrencyInfo = existingCurrency.get();
-                updatedCurrencyInfo.setChineseName(currencyRequest.getName());
-                currencyRepo.save(updatedCurrencyInfo);
-                return new ResponseEntity<>(updatedCurrencyInfo, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
+        if (existingCurrency.isPresent()) {
+            CurrencyInfo updatedCurrencyInfo = existingCurrency.get();
+            updatedCurrencyInfo.setChineseName(currencyRequest.getName());
+            currencyRepo.save(updatedCurrencyInfo);
+            return new ResponseEntity<>(updatedCurrencyInfo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCurrencyByCode(@PathVariable Long id) {
-        try {
-            Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
-            if (existingCurrency.isPresent()) {
-                currencyRepo.deleteById(id);
-                return new ResponseEntity<>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(id);
+        if (existingCurrency.isPresent()) {
+            currencyRepo.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
