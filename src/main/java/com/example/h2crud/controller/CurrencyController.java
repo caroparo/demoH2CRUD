@@ -27,7 +27,7 @@ public class CurrencyController {
     private CurrencyRepo currencyRepo;
 
     @GetMapping("/currencies")
-    public ResponseEntity<List<CurrencyInfo>> getAllCurrencies() {
+    public ResponseEntity<?> getAllCurrencies() {
         try {
             List<CurrencyInfo> currencies = new ArrayList<CurrencyInfo>();
             currencyRepo.findAll().forEach(currencies::add);
@@ -38,12 +38,12 @@ public class CurrencyController {
 
             return new ResponseEntity<List<CurrencyInfo>>(currencies, HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/currencies/{code}")
-    public ResponseEntity<CurrencyInfo> getCurrencyByCode(@PathVariable String code) {
+    public ResponseEntity<?> getCurrencyByCode(@PathVariable String code) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
@@ -52,12 +52,12 @@ public class CurrencyController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/currencies/{code}")
-    public ResponseEntity<CurrencyInfo> addCurrency(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
+    public ResponseEntity<?> addCurrency(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
@@ -68,12 +68,12 @@ public class CurrencyController {
                 return new ResponseEntity<>(newCurrency, HttpStatus.CREATED);
             }
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/currencies/{code}")
-    public ResponseEntity<CurrencyInfo> updateCurrencyByCode(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
+    public ResponseEntity<?> updateCurrencyByCode(@PathVariable String code, @RequestBody CurrencyRequest currencyRequest) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
@@ -85,12 +85,12 @@ public class CurrencyController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/currencies/{code}")
-    public ResponseEntity<CurrencyInfo> deleteCurrencyByCode(@PathVariable String code) {
+    public ResponseEntity<?> deleteCurrencyByCode(@PathVariable String code) {
         try {
             Optional<CurrencyInfo> existingCurrency = currencyRepo.findById(code);
             if (existingCurrency.isPresent()) {
@@ -100,7 +100,7 @@ public class CurrencyController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

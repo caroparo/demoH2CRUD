@@ -1,7 +1,9 @@
 package com.example.h2crud.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.*;
 
@@ -11,6 +13,10 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class CurrencyInfo {
+    @Id
+    @Column(name = "code", length = 3, nullable = false, unique = true)
     private String code;
+
+    @Column(name = "zh_tw", nullable = false)
     private String chineseName;
 }
