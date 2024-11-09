@@ -2,7 +2,7 @@ spring:
     application:
         name: demo
     datasource:
-        url: jdbc:h2:mem:demodb
+        url: jdbc:h2:mem:demodb;DB_CLOSE_DELAY=-1
         driver-class-name: org.h2.Driver
         username: sa
         password: 
@@ -21,3 +21,7 @@ spring:
             data-locations: classpath:sql/data.sql
 server:
     port: 9091
+
+logging:
+    level:
+        '[org.springframework.test.web]': DEBUG
