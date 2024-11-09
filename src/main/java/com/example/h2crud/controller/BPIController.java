@@ -31,6 +31,9 @@ public class BPIController {
     @Autowired
     private CurrencyService currencyService;
 
+    @Autowired
+    private DateTimeFormatter dateTimeFormatter;
+
     @GetMapping
     public BPIResponse getCurrentBPI() {
         List<CurrencyInfo> currenciesToTrack = currencyService.getAllCurrencies();
@@ -55,8 +58,7 @@ public class BPIController {
         String isoString = bpi.getTime().getUpdatedISO();
         ZonedDateTime utcZonedDateTime = ZonedDateTime.parse(isoString);
         ZonedDateTime localZonedDateTime = utcZonedDateTime.withZoneSameInstant(ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        String formattedTimeUpdatedString = localZonedDateTime.format(formatter);
+        String formattedTimeUpdatedString = localZonedDateTime.format(dateTimeFormatter);
 
         return new BPIResponse(formattedTimeUpdatedString, currencyDetailsMap);
     }

@@ -109,13 +109,16 @@ public class CurrencyControllerTests {
     @Order(4)
     public void Update_Currency_Expected() throws Exception {
         String requestBody = "{\"code\":\"GBP\",\"name\":\"英磅\"}";
-        mockMvc.perform(put("/currencies/2")
+        ResultActions result = mockMvc.perform(put("/currencies/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.code").value("GBP"))
                 .andExpect(jsonPath("$.chineseName").value("英磅"));
+        MvcResult mvcResult = result.andReturn();
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        System.out.println("Response content: " + responseContent);
     }
 
     @Test

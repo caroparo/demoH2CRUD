@@ -1,6 +1,7 @@
 package com.example.h2crud.config;
 
 import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,5 +17,9 @@ public class AppConfig {
            .setConnectTimeout(Duration.ofMillis(5000))
            .setReadTimeout(Duration.ofMillis(5000))
            .build();
+    }
+    @Bean
+    DateTimeFormatter dateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     }
 }
